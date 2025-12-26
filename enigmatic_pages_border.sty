@@ -1,0 +1,130 @@
+% enigmatic_pages_border.sty
+% 一个自定义的 LaTeX 宏包，用于绘制游戏《原神》中《神秘的书页》系列文本风格的 A5 页面花边。
+% 使用方法：在导言区添加 \usepackage{enigmatic_pages_border}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{enigmatic_pages_border}[2024/12/25 Haruaki Custom Border Package]
+
+% ============================================================
+% 1. 导入必要的依赖包
+% ============================================================
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\RequirePackage{eso-pic}
+
+% ============================================================
+% 2. 定义可配置参数 (使用 \providecommand 方便用户在外部覆盖)
+% ============================================================
+% 花边缩放比例 (默认适配 A5)
+\providecommand{\BorderScale}{0.28}
+% 边框距离纸张边缘的内缩距离
+\providecommand{\CornerOffset}{0.5cm}
+% 线条颜色
+\providecommand{\BorderColor}{black!80}
+% 线条粗细
+\providecommand{\BorderLineWidth}{0.8pt}
+% 管道双线的间距 (基于原图数据，一般不建议修改)
+\providecommand{\PipeWidth}{1.06}
+
+% ============================================================
+% 3. 定义核心图形组件 (Haruaki Knot Pic)
+% ============================================================
+\tikzset{
+  haruakiKnot/.pic={
+    \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round, line join=round]
+      % --- 竖线组 ---
+      \draw (0, 0) -- (0, 2.65);
+      \draw (0, 5.29) -- (0, 28.0);
+      % --- 横线组 ---
+      \draw (-21.17, 1.06) -- (-1.06, 1.06);
+      \draw (-21.17, 0) -- (-5.29, 0);
+      % --- 几何结核心结构 ---
+      \draw (-5.29, 0) -- (0, 5.29);
+      \draw (-1.06, 1.06) -- (-1.06, 28.0);
+      \draw (0, 2.65) -- (-2.65, 2.65);
+      \draw (-2.65, 2.65) -- (-2.65, 0);
+      \draw (0, 0) -- (-2.65, 0);
+      % --- 内部细节 ---
+      \draw (-5.82, 1.06) -- (-5.82, 5.82) -- (-1.06, 5.82);
+      \draw (-5.82, 5.82) -- (-2.65, 2.65);
+      \draw (-5.82, 3.17) -- (-3.18, 2.12);
+      \draw (-2.12, 3.17) -- (-3.18, 5.82) -- (-3.18, 9.52) -- (0, 12.7);
+      \draw (-2.12, 5.82) -- (-2.12, 9.26) -- (-1.06, 10.32);
+      % --- 延伸装饰 ---
+      \draw (-12.7, 0) -- (-9.53, 3.17) -- (-5.82, 3.17);
+      \draw (-9.26, 2.12) -- (-5.82, 2.12);
+      \draw (-10.32, 1.06) -- (-9.26, 2.12);
+    \end{scope}
+  }
+}
+
+% ============================================================
+% 4. 定义页面背景绘制逻辑 (自动应用到每一页)
+% ============================================================
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture, overlay]
+    % 计算内缩距离
+    \pgfmathsetmacro{\d}{\PipeWidth * \BorderScale}
+    % 设定安全起始距离 (避开角落结结构)
+    \pgfmathsetmacro{\safeX}{18 * \BorderScale}
+
+    \ifodd\value{page}
+      % ================= [奇数页 (右页)] =================
+      % 1. 定义角点
+      \coordinate (SE) at ($(current page.south east) + (-\CornerOffset, \CornerOffset)$);
+      \coordinate (NE) at ($(current page.north east) + (-\CornerOffset, -\CornerOffset)$);
+      \coordinate (SW) at ($(current page.south west) + (\CornerOffset, \CornerOffset)$);
+      \coordinate (NW) at ($(current page.north west) + (\CornerOffset, -\CornerOffset)$);
+
+      % 2. 绘制右侧花边
+      \pic[scale=\BorderScale] at (SE) {haruakiKnot};
+      \pic[scale=\BorderScale, yscale=-1] at (NE) {haruakiKnot};
+
+      % 3. 连接同侧竖管 (右侧)
+      \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
+        \draw ($(SE) + (0, 20*\BorderScale)$) -- ($(NE) + (0, -20*\BorderScale)$);
+        \draw ($(SE) + (-\d, 20*\BorderScale)$) -- ($(NE) + (-\d, -20*\BorderScale)$);
+      \end{scope}
+
+      % 4. 延伸横线 (向左延伸，不封口)
+      \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
+        % 底部横线
+        \draw ($(SE) + (-\safeX, 0)$) -- (SW);
+        \draw ($(SE) + (-\safeX, \d)$) -- ($(SW) + (0, \d)$);
+        % 顶部横线
+        \draw ($(NE) + (-\safeX, 0)$) -- (NW);
+        \draw ($(NE) + (-\safeX, -\d)$) -- ($(NW) + (0, -\d)$);
+      \end{scope}
+
+    \else
+      % ================= [偶数页 (左页)] =================
+      % 1. 定义角点
+      \coordinate (SW) at ($(current page.south west) + (\CornerOffset, \CornerOffset)$);
+      \coordinate (NW) at ($(current page.north west) + (\CornerOffset, -\CornerOffset)$);
+      \coordinate (SE) at ($(current page.south east) + (-\CornerOffset, \CornerOffset)$);
+      \coordinate (NE) at ($(current page.north east) + (-\CornerOffset, -\CornerOffset)$);
+
+      % 2. 绘制左侧花边
+      \pic[scale=\BorderScale, xscale=-1] at (SW) {haruakiKnot};
+      \pic[scale=\BorderScale, xscale=-1, yscale=-1] at (NW) {haruakiKnot};
+
+      % 3. 连接同侧竖管 (左侧)
+      \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
+        \draw ($(SW) + (0, 20*\BorderScale)$) -- ($(NW) + (0, -20*\BorderScale)$);
+        \draw ($(SW) + (\d, 20*\BorderScale)$) -- ($(NW) + (\d, -20*\BorderScale)$);
+      \end{scope}
+
+      % 4. 延伸横线 (向右延伸，不封口)
+      \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
+        % 底部横线
+        \draw ($(SW) + (\safeX, 0)$) -- (SE);
+        \draw ($(SW) + (\safeX, \d)$) -- ($(SE) + (0, \d)$);
+        % 顶部横线
+        \draw ($(NW) + (\safeX, 0)$) -- (NE);
+        \draw ($(NW) + (\safeX, -\d)$) -- ($(NE) + (0, -\d)$);
+      \end{scope}
+    \fi
+  \end{tikzpicture}
+}
+
+\endinput
