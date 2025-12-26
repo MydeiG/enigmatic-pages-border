@@ -1,14 +1,17 @@
 \documentclass[a5paper,twoside]{article}
 
 % 1. 导入你的自定义花边包
+% 1. Import your custom border package
 \usepackage{../enigmatic_pages_border}
 
 % 2. 其他正文需要的包
+% 2. Other packages needed for the main text
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{lipsum} % 仅供演示
-\usepackage{xeCJK}
+\usepackage{xeCJK} % 中文支持
 
 % (可选) 如果你想修改花边的参数，可以在导入包 *之后* 重新定义
+% (Optional) If you want to modify the border parameters, you can redefine them *after* importing the package
 % \renewcommand{\BorderColor}{red!50!black}
 % \renewcommand{\CornerOffset}{0.3cm}
 
