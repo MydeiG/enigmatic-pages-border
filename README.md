@@ -2,8 +2,7 @@
 
 ## 简介 Introduction
 
-![神秘的书页 Enigmatic Pages](https://gi.yatta.moe/assets/UI/UI_ItemIcon_120577.png) 
-![拉伸版 Streched](./fig/stretched.png)
+![神秘的书页 Enigmatic Pages](https://gi.yatta.moe/assets/UI/UI_ItemIcon_120577.png) $\to$   <img src="./fig/stretched.png" alt="拉伸版 Streched" style="zoom:10%;" />
 
 一个自定义的 LaTeX 宏包, 用于绘制游戏《原神》中《神秘的书页》系列文本风格的 A5 页面花边.  
 A custom LaTeX package for drawing A5 page borders in the style of the "Enigmatic Pages" from the game Genshin Impact.
