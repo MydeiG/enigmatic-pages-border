@@ -12,8 +12,8 @@ A custom LaTeX package for drawing A5 page borders in the style of the "Enigmati
 使用人所需要的文件仅有 `enigmatic_pages_border.sty` 一个. 其余文件作解释和介绍用.  
 The user only need `enigmatic_pages_border.sty`. The other files are for explanation and introduction.
 
-下载并将 `.sty` 文件放在你的 `.tex` 同级目录下, 并在 `.tex` 文件的在导言区添加 \usepackage{enigmatic_pages_border}, 一如 `./exempli/ex.tex` 所示.  
-Download and place the `.sty` file in the same directory as your `.tex` file, add \usepackage{enigmatic_pages_border} at the preamble of your `.tex` file, as shown in `./exempli/ex.tex`.
+下载并将 `.sty` 文件放在你的 `.tex` 同级目录下, 并在 `.tex` 文件的在导言区添加 `\usepackage{enigmatic_pages_border}`, 一如 `./exempli/ex.tex` 所示.  
+Download and place the `.sty` file in the same directory as your `.tex` file, add `\usepackage{enigmatic_pages_border}` at the preamble of your `.tex` file, as shown in `./exempli/ex.tex`.
 
 ## 依赖项目 Reliances
 
