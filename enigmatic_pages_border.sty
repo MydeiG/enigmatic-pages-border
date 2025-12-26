@@ -3,7 +3,7 @@
 % 使用方法：在导言区添加 \usepackage{enigmatic_pages_border}
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{enigmatic_pages_border}[2024/12/25 Haruaki Custom Border Package]
+\ProvidesPackage{enigmatic_pages_border}[2025-12-25 Enigmatic Pages Custom Border Package]
 
 % ============================================================
 % 1. 导入必要的依赖包
@@ -27,10 +27,10 @@
 \providecommand{\PipeWidth}{1.06}
 
 % ============================================================
-% 3. 定义核心图形组件 (Haruaki Knot Pic)
+% 3. 定义核心图形组件 (Enigmatic Pages Knot Pic)
 % ============================================================
 \tikzset{
-  haruakiKnot/.pic={
+  EnigmaticPagesKnot/.pic={
     \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round, line join=round]
       % --- 竖线组 ---
       \draw (0, 0) -- (0, 2.65);
@@ -77,8 +77,8 @@
       \coordinate (NW) at ($(current page.north west) + (\CornerOffset, -\CornerOffset)$);
 
       % 2. 绘制右侧花边
-      \pic[scale=\BorderScale] at (SE) {haruakiKnot};
-      \pic[scale=\BorderScale, yscale=-1] at (NE) {haruakiKnot};
+      \pic[scale=\BorderScale] at (SE) {EnigmaticPagesKnot};
+      \pic[scale=\BorderScale, yscale=-1] at (NE) {EnigmaticPagesKnot};
 
       % 3. 连接同侧竖管 (右侧)
       \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
@@ -105,8 +105,8 @@
       \coordinate (NE) at ($(current page.north east) + (-\CornerOffset, -\CornerOffset)$);
 
       % 2. 绘制左侧花边
-      \pic[scale=\BorderScale, xscale=-1] at (SW) {haruakiKnot};
-      \pic[scale=\BorderScale, xscale=-1, yscale=-1] at (NW) {haruakiKnot};
+      \pic[scale=\BorderScale, xscale=-1] at (SW) {EnigmaticPagesKnot};
+      \pic[scale=\BorderScale, xscale=-1, yscale=-1] at (NW) {EnigmaticPagesKnot};
 
       % 3. 连接同侧竖管 (左侧)
       \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
