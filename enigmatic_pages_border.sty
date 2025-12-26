@@ -1,12 +1,15 @@
 % enigmatic_pages_border.sty
 % 一个自定义的 LaTeX 宏包，用于绘制游戏《原神》中《神秘的书页》系列文本风格的 A5 页面花边。
+% A custom LaTeX package for drawing A5 page borders in the style of the "Enigmatic Pages" text from the game Genshin Impact.
 % 使用方法：在导言区添加 \usepackage{enigmatic_pages_border}
+% Usage: add \usepackage{enigmatic_pages_border} at the preamble
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{enigmatic_pages_border}[2025-12-25 Enigmatic Pages Custom Border Package]
 
 % ============================================================
 % 1. 导入必要的依赖包
+% Import necessary packages
 % ============================================================
 \RequirePackage{tikz}
 \usetikzlibrary{calc}
@@ -14,16 +17,22 @@
 
 % ============================================================
 % 2. 定义可配置参数 (使用 \providecommand 方便用户在外部覆盖)
+% Define configurable parameters (using \providecommand for user override)
 % ============================================================
 % 花边缩放比例 (默认适配 A5)
+% Border scaling factor (default for A5)
 \providecommand{\BorderScale}{0.28}
 % 边框距离纸张边缘的内缩距离
+% Inset distance of the border from the paper edge
 \providecommand{\CornerOffset}{0.5cm}
 % 线条颜色
+% Line color
 \providecommand{\BorderColor}{black!80}
 % 线条粗细
+% Line thickness
 \providecommand{\BorderLineWidth}{0.8pt}
 % 管道双线的间距 (基于原图数据，一般不建议修改)
+% Spacing between the double lines of the pipe (based on original image data, generally not recommended to change)
 \providecommand{\PipeWidth}{1.06}
 
 % ============================================================
@@ -32,25 +41,35 @@
 \tikzset{
   EnigmaticPagesKnot/.pic={
     \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round, line join=round]
-      % --- 竖线组 ---
+     
+% --- 竖线组 ---
+% --- Vertical lines group ---
       \draw (0, 0) -- (0, 2.65);
       \draw (0, 5.29) -- (0, 28.0);
-      % --- 横线组 ---
+     
+% --- 横线组 ---
+% --- Horizontal lines group ---
       \draw (-21.17, 1.06) -- (-1.06, 1.06);
       \draw (-21.17, 0) -- (-5.29, 0);
-      % --- 几何结核心结构 ---
+     
+% --- 几何结核心结构 ---
+% --- Core geometric knot structure ---
       \draw (-5.29, 0) -- (0, 5.29);
       \draw (-1.06, 1.06) -- (-1.06, 28.0);
       \draw (0, 2.65) -- (-2.65, 2.65);
       \draw (-2.65, 2.65) -- (-2.65, 0);
       \draw (0, 0) -- (-2.65, 0);
-      % --- 内部细节 ---
+     
+% --- 内部细节 ---
+% --- Internal details ---
       \draw (-5.82, 1.06) -- (-5.82, 5.82) -- (-1.06, 5.82);
       \draw (-5.82, 5.82) -- (-2.65, 2.65);
       \draw (-5.82, 3.17) -- (-3.18, 2.12);
       \draw (-2.12, 3.17) -- (-3.18, 5.82) -- (-3.18, 9.52) -- (0, 12.7);
       \draw (-2.12, 5.82) -- (-2.12, 9.26) -- (-1.06, 10.32);
-      % --- 延伸装饰 ---
+     
+% --- 延伸装饰 ---
+% --- Extended decoration ---
       \draw (-12.7, 0) -- (-9.53, 3.17) -- (-5.82, 3.17);
       \draw (-9.26, 2.12) -- (-5.82, 2.12);
       \draw (-10.32, 1.06) -- (-9.26, 2.12);
@@ -60,66 +79,78 @@
 
 % ============================================================
 % 4. 定义页面背景绘制逻辑 (自动应用到每一页)
+% Define page background drawing logic (automatically applied to each page)
 % ============================================================
 \AddToShipoutPictureBG{%
   \begin{tikzpicture}[remember picture, overlay]
-    % 计算内缩距离
+   
+% 计算内缩距离
+% Calculate inset distance
     \pgfmathsetmacro{\d}{\PipeWidth * \BorderScale}
-    % 设定安全起始距离 (避开角落结结构)
+   
+% 设定安全起始距离 (避开角落结结构)
+% Set safe starting distance (to avoid corner knot structure)
     \pgfmathsetmacro{\safeX}{18 * \BorderScale}
 
     \ifodd\value{page}
-      % ================= [奇数页 (右页)] =================
-      % 1. 定义角点
+     
+% ================= [奇数页 (右页)] =================
+     
+% 1. 定义角点 Define corner points
       \coordinate (SE) at ($(current page.south east) + (-\CornerOffset, \CornerOffset)$);
       \coordinate (NE) at ($(current page.north east) + (-\CornerOffset, -\CornerOffset)$);
       \coordinate (SW) at ($(current page.south west) + (\CornerOffset, \CornerOffset)$);
       \coordinate (NW) at ($(current page.north west) + (\CornerOffset, -\CornerOffset)$);
 
-      % 2. 绘制右侧花边
+% 2. 绘制右侧花边 Draw right border
       \pic[scale=\BorderScale] at (SE) {EnigmaticPagesKnot};
       \pic[scale=\BorderScale, yscale=-1] at (NE) {EnigmaticPagesKnot};
 
-      % 3. 连接同侧竖管 (右侧)
+% 3. 连接同侧竖管 (右侧) Connect vertical pipes on the same side (right side)
       \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
         \draw ($(SE) + (0, 20*\BorderScale)$) -- ($(NE) + (0, -20*\BorderScale)$);
         \draw ($(SE) + (-\d, 20*\BorderScale)$) -- ($(NE) + (-\d, -20*\BorderScale)$);
       \end{scope}
 
-      % 4. 延伸横线 (向左延伸，不封口)
+% 4. 延伸横线 (向左延伸，不封口) Extend horizontal lines (extend to the left, not closed)
       \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
-        % 底部横线
+       
+% 底部横线 horizontal line at bottom
         \draw ($(SE) + (-\safeX, 0)$) -- (SW);
         \draw ($(SE) + (-\safeX, \d)$) -- ($(SW) + (0, \d)$);
-        % 顶部横线
+       
+% 顶部横线 horizontal line at top
         \draw ($(NE) + (-\safeX, 0)$) -- (NW);
         \draw ($(NE) + (-\safeX, -\d)$) -- ($(NW) + (0, -\d)$);
       \end{scope}
 
     \else
-      % ================= [偶数页 (左页)] =================
-      % 1. 定义角点
+     
+% ================= [偶数页 (左页)] =================
+% 1. 定义角点 Define corner points
       \coordinate (SW) at ($(current page.south west) + (\CornerOffset, \CornerOffset)$);
       \coordinate (NW) at ($(current page.north west) + (\CornerOffset, -\CornerOffset)$);
       \coordinate (SE) at ($(current page.south east) + (-\CornerOffset, \CornerOffset)$);
       \coordinate (NE) at ($(current page.north east) + (-\CornerOffset, -\CornerOffset)$);
-
-      % 2. 绘制左侧花边
+     
+% 2. 绘制左侧花边 Draw left border
       \pic[scale=\BorderScale, xscale=-1] at (SW) {EnigmaticPagesKnot};
       \pic[scale=\BorderScale, xscale=-1, yscale=-1] at (NW) {EnigmaticPagesKnot};
 
-      % 3. 连接同侧竖管 (左侧)
+% 3. 连接同侧竖管 (左侧) Connect vertical pipes on the same side (left side)
       \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
         \draw ($(SW) + (0, 20*\BorderScale)$) -- ($(NW) + (0, -20*\BorderScale)$);
         \draw ($(SW) + (\d, 20*\BorderScale)$) -- ($(NW) + (\d, -20*\BorderScale)$);
       \end{scope}
 
-      % 4. 延伸横线 (向右延伸，不封口)
+% 4. 延伸横线 (向右延伸，不封口) Extend horizontal lines (extend to the right, not closed)
       \begin{scope}[draw=\BorderColor, line width=\BorderLineWidth, line cap=round]
-        % 底部横线
+       
+% 底部横线 horizontal line at bottom
         \draw ($(SW) + (\safeX, 0)$) -- (SE);
         \draw ($(SW) + (\safeX, \d)$) -- ($(SE) + (0, \d)$);
-        % 顶部横线
+       
+% 顶部横线 horizontal line at top
         \draw ($(NW) + (\safeX, 0)$) -- (NE);
         \draw ($(NW) + (\safeX, -\d)$) -- ($(NE) + (0, -\d)$);
       \end{scope}
